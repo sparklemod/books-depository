@@ -12,7 +12,12 @@
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.0.*",
         "symfony/runtime": "7.0.*",
-        "symfony/yaml": "7.0.*"
+        "symfony/yaml": "7.0.*",
+        "doctrine/orm": "^3.0",
+        "doctrine/dbal": "^4",
+        "symfony/cache": "^7",
+        "doctrine/migrations": "^3.5",
+        "doctrine/annotations": "^2.0"
     },
     "require-dev": {
     },
