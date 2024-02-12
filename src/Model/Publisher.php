@@ -12,7 +12,7 @@ class Publisher extends BaseModel
     {
         $publisher = $this->em->getRepository(PublisherEntity::class)->find($data['id']);
         $publisher->setName($data['name'])
-        ->setAdress($data['address'])
+        ->setAddress($data['address'])
         ->setBookId($data['book_id']);
 
         $this->em->persist($publisher);

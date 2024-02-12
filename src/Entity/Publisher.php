@@ -32,7 +32,7 @@ class Publisher
      * @var string
      */
     #[ORM\Column(type: 'string')]
-    private string $adress;
+    private string $address;
 
     /**
      * One Publisher has many Books.
@@ -68,14 +68,14 @@ class Publisher
         return $this;
     }
 
-    public function getAdress(): string
+    public function getAddress(): string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(string $adress): Publisher
+    public function setAddress(string $address): Publisher
     {
-        $this->adress = $adress;
+        $this->address = $address;
         return $this;
     }
 
