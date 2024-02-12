@@ -2,15 +2,12 @@
 
 namespace App\Model;
 
-use App\Entity\Book as BookEntity;
 use App\Entity\Author as AuthorEntity;
-use DateTime;
-use App\Services\Doctrine;
 
-class Author
+class Author extends BaseModel
 {
-// Создание нового автора
-// Удаление автора
+// Создание нового автора ?+
+// Удаление автора ?+
     public function create(array $data): void
     {
         $author = new AuthorEntity();
@@ -22,8 +19,15 @@ class Author
             $author->addBook($data['book_id']);
         }
 
-        Doctrine::getEntityManager()->persist($author);
-        Doctrine::getEntityManager()->flush();
+        $this->em->persist($author);
+        $this->em->flush();
+    }
+
+    public function delete(int $authorId): void
+    {
+        $author = $this->em->getRepository(AuthorEntity::class)->find($authorId);
+        $this->em->remove($author);
+        $this->em->flush();
     }
 
 }

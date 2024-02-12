@@ -4,15 +4,17 @@ namespace App\Model;
 
 use App\Services\Doctrine;
 use App\Entity\Publisher;
+use DateTime;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query\Expr\Join;
-use \App\Entity\Book as BookEntity;
+use App\Entity\Book as BookEntity;
+use App\Entity\Author as AuthorEntity;
 
-class Book
+class Book extends BaseModel
 {
     public function getListAll(): array
     {
-        return Doctrine::getEntityManager()
+        return $this->em
             ->getRepository(BookEntity::class)
             ->createQueryBuilder('b')
             ->select('b.*')
@@ -22,21 +24,27 @@ class Book
     }
 
     //Создание книги с привязкой к существующему автору
-    public function create(): void
+    public function create($data): void
     {
-        $user = (new UserRepository())->find($userID);
-        $book = new BookEntity();
-        $year = new DateTime($data['year']);
-        $book->setName($data['name'])
-            ->setAuthor($data['author'])
-            ->setEdition($data['edition'])
-            ->setYear($year)
-            ->addUser($user);
-        $user->addBook($book);
-        Doctrine::getEntityManager()->persist($book);
-        Doctrine::getEntityManager()->flush();
-
+        $author = $this->em->getRepository(AuthorEntity::class)->find($data['authorId']);
+        if ($author) {
+            $book = new BookEntity();
+            $year = new DateTime($data['year']);
+            $book->setTitle($data['title'])
+                ->setYear($year)
+                ->setPublisherId($data['publisher_id'])
+                ->addAuthor($author);
+            $author->addBook($book);
+            $this->em->persist($book);
+            $this->em->flush();
+        }
     }
 
     //Удаление книги
+    public function delete(int $bookID): void
+    {
+        $book = $this->em->find($bookID);
+        $this->em->remove($book);
+        $this->em->flush();
+    }
 }

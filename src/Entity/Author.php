@@ -95,4 +95,13 @@ class Author
         $this->books = $books;
         return $this;
     }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            $book->removeAuthor($this);
+        }
+
+        return $this;
+    }
 }

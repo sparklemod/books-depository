@@ -2,14 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\BookRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Id;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: BookRepository::class)]
 #[ORM\Table(name: 'Books')]
 class Book
 {
@@ -104,6 +106,22 @@ class Book
     public function setPublisherId(?Publisher $publisher_id): Book
     {
         $this->publisher_id = $publisher_id;
+        return $this;
+    }
+
+    public function addAuthor(Author $author): static
+    {
+        if (!$this->authors->contains($author)) {
+            $this->authors->add($author);
+        }
+
+        return $this;
+    }
+
+    public function removeAuthor(Author $author): static
+    {
+        $this->authors->removeElement($author);
+
         return $this;
     }
 }

@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Repository\PublisherRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Id;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: PublisherRepository::class)]
 #[ORM\Table(name: 'Publishers')]
 class Publisher
 {
@@ -86,6 +87,28 @@ class Publisher
     public function setBookId(Collection $book_id): Publisher
     {
         $this->book_id = $book_id;
+        return $this;
+    }
+
+    public function addBookId(Book $bookId): static
+    {
+        if (!$this->book_id->contains($bookId)) {
+            $this->book_id->add($bookId);
+            $bookId->setPublisherId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookId(Book $bookId): static
+    {
+        if ($this->book_id->removeElement($bookId)) {
+            // set the owning side to null (unless already changed)
+            if ($bookId->getPublisherId() === $this) {
+                $bookId->setPublisherId(null);
+            }
+        }
+
         return $this;
     }
 }
