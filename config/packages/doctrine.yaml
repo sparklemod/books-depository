@@ -1,0 +1,25 @@
+doctrine:
+  dbal:
+    driver: 'pdo_mysql'
+    server_version: '8.0'
+    host: 'localhost'
+    port: 3306
+    dbname: 'BooksDepository'
+    user: 'rina'
+    password: 'panamacity'
+    charset: 'utf8mb4'
+
+  orm:
+    auto_generate_proxy_classes: true
+    naming_strategy: doctrine.orm.naming_strategy.underscore
+    auto_mapping: true
+
+    mappings:
+      App:
+        is_bundle: false
+        dir: 'src/Entity'
+        prefix: 'App\Entity'
+        alias: App
+        type: attribute
+
+
