@@ -32,10 +32,9 @@ class AuthorController extends AbstractController
         $author->setName($data['name'])
             ->setSurname($data['surname']);
 
-        $book = $this->bookRepository->find($data['book_id']);
-
-        if (isset($data['book_id']) && $book !== null) {
-            $author->addBook($book);
+        if (isset($data['book_id'])) {
+            $book = $this->bookRepository->find($data['book_id']);
+            is_null($book) or $author->addBook($book);
         }
 
         $this->entityManager->persist($author);
