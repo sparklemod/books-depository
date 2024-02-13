@@ -2,36 +2,55 @@
 
 namespace App\Controller;
 
+use App\Entity\Publisher;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class PublisherController extends AbstractController
 {
-    #[Route('/publisher', name: 'app_publisher')]
-    public function index(): JsonResponse
+    private EntityRepository $publisherRepository;
+    private EntityManagerInterface $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/PublisherController.php',
-        ]);
+        $this->publisherRepository = $entityManager->getRepository(Publisher::class);
+        $this->entityManager = $entityManager;
     }
 
-    public function edit(array $data): void
+    #[Route('/publisher/edit', name: 'update_publisherEdit', methods: ['PUT'])]
+    public function edit(Request $request): Response
     {
-        $publisher = $this->em->getRepository(PublisherEntity::class)->find($data['id']);
-        $publisher->setName($data['name'])
-            ->setAddress($data['address'])
-            ->setBookId($data['book_id']);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $publisher = $this->publisherRepository->find($data['publisher_id']);
 
-        $this->em->persist($publisher);
-        $this->em->flush();
+        if ($publisher) {
+            $publisher->setName($data['name'])
+                ->setAddress($data['address']);
+
+            $this->entityManager->persist($publisher);
+            $this->entityManager->flush();
+            return new Response('SUCCESS: Publisher was updated');
+        }
+
+        return new Response('ERROR: Publisher not found');
     }
 
-    public function delete(int $publisherId): void
+    #[Route('/publisher/delete', name: 'delete_publisherDelete', methods: ['DELETE'])]
+    public function delete(Request $request): Response
     {
-        $publisher = $this->em->getRepository(PublisherEntity::class)->find($publisherId);
-        $this->em->remove($publisher);
-        $this->em->flush();
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $publisher = $this->publisherRepository->find($data['publisher_id']);
+
+        if ($publisher) {
+            $this->entityManager->remove($publisher);
+            $this->entityManager->flush();
+            return new Response('SUCCESS: Publisher was deleted');
+        }
+
+        return new Response('ERROR: Publisher not found');
     }
 }

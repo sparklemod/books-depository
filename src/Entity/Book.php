@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\BookRepository;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -37,14 +36,14 @@ class Book
 
     /**
      * Many Books have Many Authors.
-     * @var Collection<int, Author>
+     * @var Collection<int, Author>|null
      */
     #[ORM\ManyToMany(targetEntity: 'Author', mappedBy: "books")]
-    private Collection $authors;
+    private Collection|null $authors;
 
     /** Many Books have one Publisher */
     #[ORM\ManyToOne(targetEntity: Publisher::class, inversedBy: 'book_id')]
-    #[ORM\JoinColumn(name: 'publisher_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\JoinColumn(name: 'publisher_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private Publisher|null $publisher = null;
 
     public function __construct()
