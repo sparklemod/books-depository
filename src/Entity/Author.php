@@ -34,7 +34,10 @@ class Author
      * Many Authors have Many Books.
      * @var Collection<int, Book>|null
      */
-    #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'author_id')]
+    #[ORM\ManyToMany(targetEntity: 'Book')]
+    #[ORM\JoinTable(name: 'Authors_Books')]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'book_id', referencedColumnName: 'id')]
     private Collection|null $books;
 
     public function __construct() {

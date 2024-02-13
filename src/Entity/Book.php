@@ -30,17 +30,16 @@ class Book
     private string $title;
 
     /**
-     * @var DateTimeInterface
+     * @var int
      */
-    #[ORM\Column(type: 'datetime')]
-    private DateTimeInterface $year;
+    #[ORM\Column(type: 'smallint')]
+    private int $year;
 
     /**
      * Many Books have Many Authors.
      * @var Collection<int, Author>
      */
-    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'book_id', indexBy: 'name')]
-    #[ORM\JoinTable(name: 'books_authors')]
+    #[ORM\ManyToMany(targetEntity: 'Author', mappedBy: "books")]
     private Collection $authors;
 
     /** Many Books have one Publisher */
@@ -75,12 +74,12 @@ class Book
         return $this;
     }
 
-    public function getYear(): DateTimeInterface
+    public function getYear(): int
     {
         return $this->year;
     }
 
-    public function setYear(DateTimeInterface $year): Book
+    public function setYear(int $year): Book
     {
         $this->year = $year;
         return $this;
@@ -99,12 +98,12 @@ class Book
 
     public function getPublisherId(): ?Publisher
     {
-        return $this->publisher_id;
+        return $this->publisher;
     }
 
-    public function setPublisherId(?Publisher $publisher_id): Book
+    public function setPublisherId(?Publisher $publisher): Book
     {
-        $this->publisher_id = $publisher_id;
+        $this->publisher = $publisher;
         return $this;
     }
 

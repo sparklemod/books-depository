@@ -23,10 +23,8 @@ class AppFixtures extends Fixture
             ->setAddress('address'.$i);
 
             $book = new Book();
-            $year = new \DateTime();
-            $year->modify(-$i . 'year')->format('Y');
             $book->setTitle('book'.$i)
-            ->setYear($year)
+            ->setYear(2024 - $i)
             ->setPublisherId($publisher)
             ->addAuthor($author);
 
