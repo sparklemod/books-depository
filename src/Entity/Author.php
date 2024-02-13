@@ -32,10 +32,10 @@ class Author
 
     /**
      * Many Authors have Many Books.
-     * @var Collection<int, Book>
+     * @var Collection<int, Book>|null
      */
     #[ORM\ManyToMany(targetEntity: Book::class, mappedBy: 'author_id')]
-    private Collection $books;
+    private Collection|null $books;
 
     public function __construct() {
         $this->books = new ArrayCollection();

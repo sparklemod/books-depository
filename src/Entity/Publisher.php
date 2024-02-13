@@ -38,7 +38,7 @@ class Publisher
      * One Publisher has many Books.
      * @var Collection<int, Book>
      */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'publisher_id')]
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'publisher_id', indexBy: 'title')]
     private Collection $book_id;
 
     public function __construct()

@@ -6,7 +6,6 @@ use App\Repository\BookRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Id;
@@ -38,16 +37,16 @@ class Book
 
     /**
      * Many Books have Many Authors.
-     * @var Collection<int, Author>|null
+     * @var Collection<int, Author>
      */
-    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'book_id')]
+    #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'book_id', indexBy: 'name')]
     #[ORM\JoinTable(name: 'books_authors')]
-    private Collection|null $authors;
+    private Collection $authors;
 
     /** Many Books have one Publisher */
     #[ORM\ManyToOne(targetEntity: Publisher::class, inversedBy: 'book_id')]
-    #[ORM\JoinColumn(name: 'publisher_id', referencedColumnName: 'id')]
-    private Publisher|null $publisher_id = null;
+    #[ORM\JoinColumn(name: 'publisher_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    private Publisher|null $publisher = null;
 
     public function __construct()
     {
